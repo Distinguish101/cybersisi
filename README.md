@@ -4,11 +4,25 @@ Website for **CyberSis** — *Coded with care*: a cyber sisterhood for care-expe
 
 ## Getting started
 
+Requires Node 20.9+ and Docker Desktop (for the local database).
+
 ```bash
 npm install
-npm run dev     # http://localhost:3000
-npm run build   # production build
+cp .env.example .env    # local database URLs
+npm run db:up           # start Postgres 17 in Docker
+npm run db:migrate      # apply migrations
+npm run dev             # http://localhost:3000
 ```
+
+| Script | What it does |
+|---|---|
+| `npm run build` | Production build (includes type check) |
+| `npm run db:up` | Start the local Postgres container |
+| `npm run db:migrate` | Create/apply migrations locally (`prisma migrate dev`) |
+| `npm run db:deploy` | Apply committed migrations only (`prisma migrate deploy`) — CI/production |
+| `npm run db:studio` | Browse the database in Prisma Studio |
+
+On Windows PowerShell, use `npm.cmd` if `npm` is blocked by the execution policy.
 
 Project history and decisions: [docs/LOG.md](docs/LOG.md).
 

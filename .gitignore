@@ -17,3 +17,6 @@ npm-debug.log*
 # os / editor
 .DS_Store
 Thumbs.db
+
+# prisma generated client
+src/generated/

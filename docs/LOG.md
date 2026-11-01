@@ -139,3 +139,40 @@ npm run build   # production build
 
 ### Note
 - The file still exists in the history of commit `e06ae64` (Stage 1.2), which has already been pushed. Removing it from history would mean rewriting and force-pushing `feature-1`. That hasn't been done.
+
+---
+
+## Stage 2 — Local Postgres + Prisma (2026-11-01) · branch `feature-1`
+
+### Decision: local Postgres for development, Neon for production
+- Development and tests run against **Postgres 17 in Docker** (`docker-compose.yml`). It works offline, has no cold starts, and costs nothing.
+- Neon is plain Postgres, so **no extra code is needed to deploy there**. Only the environment changes. Neon gives a pooled `DATABASE_URL` for the app and a direct `DIRECT_URL` for migrations, both with `sslmode=require`. Local uses the same URL for both.
+- **Same major version (17) as Neon**, to avoid version differences.
+
+### What we did
+- `docker-compose.yml`: a `cybersis-db` container with a named volume and a health check.
+- **Prisma 7.10** with the `pg` driver adapter (`@prisma/adapter-pg`). It's the standard Node driver, which suits a long-running server on k3s. Neon's serverless driver is only needed for edge or serverless hosting.
+- `prisma.config.ts`: the CLI (migrate, studio) uses `DIRECT_URL`, because Neon's PgBouncer pooler can't hold migration locks.
+- `src/lib/db.ts`: a single shared `PrismaClient` (reused across dev hot-reloads), marked `server-only` so it can never be bundled into browser code.
+- **Generated client** goes to `src/generated/prisma`. It's git-ignored and recreated by `postinstall: prisma generate`.
+- **First migration** `20261101212819_init`: a `Submission` table plus `SubmissionType` and `SubmissionStatus` enums, indexed for the admin list and for retention clean-up. The SQL was reviewed before committing.
+- **npm scripts:** `db:up`, `db:migrate`, `db:deploy`, `db:studio`.
+- `.env.example` is committed. `.env` is git-ignored.
+
+### The schema is a proposal
+The `Submission` fields (first name, email, optional age range, organisation, message, and a consent timestamp) are deliberately minimal for data protection. **They still need the owner's sign-off** in the forms stage, along with the under-18 consent approach, the retention period and who the admins are. Changing them before launch is cheap: just a new migration.
+
+### Migration plan
+- **Local:** `npm run db:migrate` (`prisma migrate dev`) creates and applies migration SQL. Migration files are committed and never edited afterwards.
+- **Production (Neon):** `prisma migrate deploy` runs once as a **GitHub Actions** step before `kubectl apply`, not when each pod starts, so pods can't race each other. If it fails, the deploy stops and the old version keeps running. `migrate dev` must never be run against Neon.
+- **Before launch:** run `migrate deploy` against a Neon branch first.
+
+### Issues hit along the way
+- **Prisma CLI resolved to `8.0.0-rc`** (a pre-release) and didn't match the 7.10 client. Pinned the CLI to `prisma@7`.
+- **npm 11 blocks package install scripts by default.** Approved only `prisma` and `@prisma/engines` (they download the migration engine), recorded under `allowScripts` in `package.json`. The approval is tied to the exact version, so re-approve after upgrading Prisma.
+- The npm install was very slow, probably OneDrive syncing `node_modules`. That's another reason to move the project out of OneDrive.
+
+### Verified
+- The container is healthy and running Postgres 17.11.
+- The migration applied, and a round-trip test (insert → count → delete) through the generated client passed.
+- `tsc --noEmit` and `next build` pass, and `npm audit` reports 0 vulnerabilities.
