@@ -125,3 +125,17 @@ npm run build   # production build
 ### Why
 - It means a future session doesn't have to rediscover non-obvious patterns from several files, for example that `.reveal` relies on one observer plus the `html.js` class, or that `DecodeText` needs an `.sr-only` twin. It also keeps the safeguarding constraints in front of whoever edits the code.
 - It also records the Windows PowerShell `npm` execution-policy workaround, which we hit when running `npm run dev`.
+
+---
+
+## Stage 1.3 — CLAUDE.md made local-only (2026-11-01) · branch `feature-1`
+
+### What we did
+- Stopped tracking `CLAUDE.md` in git (`git rm --cached`). The file stays on the developer's machine.
+- Excluded it through `.git/info/exclude` rather than `.gitignore`, so the exclusion is also local and nothing about it appears in the repo.
+
+### Why
+- The owner wants the AI-assistant guide kept as a private local file, not published in the repository.
+
+### Note
+- The file still exists in the history of commit `e06ae64` (Stage 1.2), which has already been pushed. Removing it from history would mean rewriting and force-pushing `feature-1`. That hasn't been done.
