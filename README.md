@@ -16,7 +16,7 @@ Project history and decisions: [docs/LOG.md](docs/LOG.md).
 
 | Layer     | Choice                                                                              |
 | --------- | ----------------------------------------------------------------------------------- |
-| Framework | Next.js 15 (App Router) · React 19 · TypeScript                                     |
+| Framework | Next.js 16 (App Router) · React 19 · TypeScript                                     |
 | Database  | PostgreSQL (Neon) · Prisma ORM                                                      |
 | Auth      | Auth.js v5 (credentials; Google OAuth scaffolded, not fully wired — see `src/lib/auth.ts`) |
 | Payments  | Stripe Connect (Express, Accounts v2)                                               |

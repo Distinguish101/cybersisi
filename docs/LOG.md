@@ -34,7 +34,7 @@ Newest stage at the bottom. Updated with every commit.
 - **Design bugs found:** no mobile menu, white-on-gradient buttons fail contrast, the animated heading reads as noise to screen readers, content stays invisible if JS fails, Google Fonts sends visitor IPs to Google, the copyright year is wrong, and there are no safeguarding or privacy pages.
 
 ### Open decisions (not yet made)
-- [ ] Final name: **CyberSis** (design, cybersis.org) vs **Cybercel** (checklist). Repo is `cybersisi`. Using CyberSis for now.
+- [x] Final name: **CyberSis**. Decided in Stage 1.1. The repo is still called `cybersisi`.
 - [ ] How much of the founder's personal story stays public, especially details about her brother, who hasn't necessarily consented.
 - [ ] Permission to use "University of Dundee" on the site.
 - [ ] Whether Stripe Connect is needed at all.
@@ -90,3 +90,27 @@ npm install
 npm run dev     # http://localhost:3000
 npm run build   # production build
 ```
+
+---
+
+## Stage 1.1 — Name decided, upgrade to Next.js 16 (2026-11-01) · branch `feature-1`
+
+### What we did
+- **Name confirmed: CyberSis.** It was already used throughout the site, `package.json` and `site.ts`, so no copy changes were needed.
+- **Upgraded Next.js 15.5 → 16.4** (React 19.3, TypeScript 5.9). README stack table updated.
+
+### Why
+- The stack table is a guide, not a fixed spec. Stage 1 had stayed on Next 15 only because the table said so.
+- Next 16 fixes the 2 `npm audit` findings from Stage 1 (vulnerable PostCSS bundled in Next 15). **`npm audit` now reports 0 vulnerabilities.**
+- Starting on the current major avoids a migration later, once forms, auth and the database are in.
+
+### What changed in the code
+- Nothing in `src/`. The app already followed Next 16's rules: no `middleware`, no sync `params`, no `next lint` script.
+- Next 16 rewrote `tsconfig.json` on first build (`jsx: "react-jsx"`, plus `.next/dev/types`). That's expected and kept.
+
+### Notes for later stages
+- In Next 16, **`middleware.ts` is renamed `proxy.ts`**. Use that name if we add auth or route protection.
+- **Turbopack** is now the default for `dev` and `build`.
+
+### Verified
+- `next build` passes. Every route returns 200, unknown routes return 404, and there are 0 Google Fonts requests.
