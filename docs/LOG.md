@@ -114,3 +114,14 @@ npm run build   # production build
 
 ### Verified
 - `next build` passes. Every route returns 200, unknown routes return 404, and there are 0 Google Fonts requests.
+
+---
+
+## Stage 1.2 — CLAUDE.md (2026-11-01) · branch `feature-1`
+
+### What we did
+- Added **`CLAUDE.md`**, a guide for AI coding assistants working in this repo. It covers the commands, the architecture (styling and tokens, the scroll-reveal pattern, the accessible decode heading, site constants), the stage → log → commit → push workflow, and the safeguarding and content rules.
+
+### Why
+- It means a future session doesn't have to rediscover non-obvious patterns from several files, for example that `.reveal` relies on one observer plus the `html.js` class, or that `DecodeText` needs an `.sr-only` twin. It also keeps the safeguarding constraints in front of whoever edits the code.
+- It also records the Windows PowerShell `npm` execution-policy workaround, which we hit when running `npm run dev`.
