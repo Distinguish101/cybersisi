@@ -8,8 +8,8 @@ export default function JoinCards() {
         <span className="kicker">For young women</span>
         <h3>Become a member</h3>
         <p>
-          Care-experienced or raised by the village, aged 16–25? Join free and grow your confidence,
-          cyber skills and your sisterhood.
+          A young woman aged 16–25? Join free and grow your confidence, cyber skills and your
+          sisterhood.
         </p>
         <a href={mailto("I want to join the village")} className="btn btn-primary">
           Join the village →

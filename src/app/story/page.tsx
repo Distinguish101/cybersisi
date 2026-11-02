@@ -24,13 +24,12 @@ export default function StoryPage() {
               family cannot.
             </p>
             <p>
-              Today she studies <strong>Cyber Security at the University of Dundee</strong>, and she has
+              Today she studies <strong>Cyber Security at Abertay University</strong>, and she has
               made a decision: her experience will not be a closing chapter, it will be a doorway for
               others.
             </p>
             <p>
-              CyberSis is that doorway. A network where care-experienced young women, and the young
-              people the village has carried, become{" "}
+              CyberSis is that doorway. A network where young women become{" "}
               <strong>digitally confident, cyber literate and emotionally intelligent</strong> — and
               where no one walks the path alone.
             </p>
@@ -40,8 +39,8 @@ export default function StoryPage() {
             <span className="tag">// the journey so far</span>
             <ul className="timeline">
               <li><span className="yr">2020</span><span className="ev">A new beginning — Excelsis and her brother arrive in the UK.</span></li>
-              <li><span className="yr">2022</span><span className="ev">Loss, and the village steps in. Care-experienced, but never without community.</span></li>
-              <li><span className="yr">2025</span><span className="ev">Cyber Security studies begin at the University of Dundee.</span></li>
+              <li><span className="yr">2022</span><span className="ev">Loss, and the village steps in. Never without community.</span></li>
+              <li><span className="yr">2025</span><span className="ev">Cyber Security studies begin at Abertay University.</span></li>
               <li><span className="yr">May 2027</span><span className="ev">CyberSis launches — turning lived experience into shared opportunity.</span></li>
             </ul>
             <p className="memoriam" style={{ marginTop: 24 }}>
@@ -62,7 +61,7 @@ export default function StoryPage() {
             </p>
             <div className="sig">
               <div className="avatar" aria-hidden="true">E</div>
-              <div className="who"><b>Excelsis</b><span>Founder · BSc Cyber Security, University of Dundee</span></div>
+              <div className="who"><b>Excelsis Ikem</b><span>Founder · BSc Cyber Security, Abertay University</span></div>
             </div>
             <p className="memoriam" style={{ marginTop: 28, maxWidth: "34ch" }}>
               &ldquo;However long the night, the dawn will break.&rdquo; — African proverb

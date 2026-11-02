@@ -1,6 +1,6 @@
 # cybersisi
 
-Website for **CyberSis** — *Coded with care*: a cyber sisterhood for care-experienced young women. Dundee, Scotland · launching May 2027.
+Website for **CyberSis** — *Coded with care*: a cyber sisterhood for young women. Dundee, Scotland · launching May 2027.
 
 ## Getting started
 

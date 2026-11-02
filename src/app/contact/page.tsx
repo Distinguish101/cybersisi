@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 // Answers only restate what the site already commits to. TODO(content): review with the founder.
 const faqs = [
-  { q: "Who can join?", a: "Care-experienced young women aged 16–25, and young people raised by the village — by extended family, community or mentors when a parent could not be there. Migrant and refugee-background young people are welcome too." },
+  { q: "Who can join?", a: "Any young woman aged 16–25, whatever her background — including if you're new to the UK." },
   { q: "Does it cost anything?", a: "No. Membership is free." },
   { q: "Do I need to know anything about tech?", a: "Not at all. Everything starts beginner-friendly — from \"I'm not techie\" to \"watch me.\"" },
   { q: "When does it start?", a: "CyberSis launches in May 2027 in Dundee, Scotland. Register your interest and we'll be in touch as the first circles open." },

@@ -36,7 +36,7 @@ Newest stage at the bottom. Updated with every commit.
 ### Open decisions (not yet made)
 - [x] Final name: **CyberSis**. Decided in Stage 1.1. The repo is still called `cybersisi`.
 - [ ] How much of the founder's personal story stays public, especially details about her brother, who hasn't necessarily consented.
-- [ ] Permission to use "University of Dundee" on the site.
+- [ ] Permission to use "Abertay University" on the site (corrected from "University of Dundee" in Stage 3).
 - [ ] Whether Stripe Connect is needed at all.
 - [ ] Wording review with young people ("Her future is encrypted", "clever girl").
 
@@ -176,3 +176,43 @@ The `Submission` fields (first name, email, optional age range, organisation, me
 - The container is healthy and running Postgres 17.11.
 - The migration applied, and a round-trip test (insert → count → delete) through the generated client passed.
 - `tsc --noEmit` and `next build` pass, and `npm audit` reports 0 vulnerabilities.
+
+---
+
+## Stage 3 — Audience wording: open to all young women (2026-11-02) · branch `feature-1`
+
+### What we did
+Removed the "care-experienced" framing across the site. CyberSis is **for all young women aged 16–25**, whatever their background.
+
+| Where | Before → after |
+|---|---|
+| Home hero | "for care-experienced young women — and everyone raised by the village" → "for young women" |
+| Home stats | "Care-experienced first" → "Open to all young women" |
+| Footer, README, site description (SEO) | "care-experienced young women" → "young women" |
+| Join card (members) | "Care-experienced or raised by the village, aged 16–25?" → "A young woman aged 16–25?" |
+| FAQ "Who can join?" | Long care/migrant list → "Any young woman aged 16–25, whatever her background — including if you're new to the UK." |
+| Programmes "Why cyber" | "skills many care-experienced young women already have" → "skills many young women already have" |
+| Village page | First card is now "Young women, 16–25" (open to all). "Raised by the village" and "New to the UK" now refer to young women. New lede and description. |
+| Story | "care-experienced young women, and the young people the village has carried" → "young women". The timeline line "Care-experienced, but never without community" → "Never without community". |
+
+### Why
+- The owner's direction: the network is inclusive of all women, so it should say "women", not target care experience.
+- It also replaced "young people" with "young women" wherever "young people" implied a mixed-gender audience.
+
+### Kept deliberately
+- **"The village" concept** and the founder's own memorial lines ("Carried by the village", "the way Excelsis was carried"). They're about her story, not an eligibility rule.
+- **Ages 16–25** are unchanged, so the under-18 and Children's Code points still apply.
+
+### Verified
+- No remaining "care-experienced", "looked-after", "foster", "kinship" or "young people" wording in `src/` or the README.
+- `next build` passes.
+
+### Note
+- The founder story (`/story`) was edited at the owner's explicit request. Otherwise it stays as her own copy.
+
+### Addendum: founder's full name in the footer
+- The footer credit now reads "Founded by **Excelsis Ikem**" (was "Excelsis"), at the owner's request. The founder quote on `/story` now also shows "Excelsis Ikem".
+
+### Addendum: university corrected to Abertay
+- The founder studies at **Abertay University** (Dundee), not the University of Dundee. Corrected in four places: the home stats ("Student-led · Abertay University"), the story paragraph, the 2025 timeline entry and the founder sign-off ("BSc Cyber Security, Abertay University").
+- The open decision still applies: get Abertay's OK before launch, because naming the university can suggest it endorses CyberSis.
