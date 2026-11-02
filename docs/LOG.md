@@ -250,3 +250,10 @@ The `trycloudflare.com` link showed a different (broken-looking) site from local
 
 - "Become a mentor" and "Partner with us" changed from the outline (`btn-ghost`) style to the pink gradient (`btn-primary`), matching "Join the village". This was the owner's request, so all three audiences get an equally prominent button.
 - The change is in `JoinCards`, so it applies on both the home page and `/get-involved`. Contrast is unchanged: dark text on the gradient, AA.
+
+---
+
+## Stage 3.3 — Founder timeline: education corrected (2026-11-02)
+
+- On the `/story` timeline, **2025** now reads "Cyber Security studies begin at West Lothian College" (it said Abertay), and a new **2026** entry reads "Ethical Hacking studies begin at Abertay University". This was the owner's correction of the founder's education history.
+- Follow-up: both timeline entries now use the past tense ("began"). The story paragraph now reads "Today she studies **Ethical Hacking at Abertay University**", and the founder sign-off reads "BSc Ethical Hacking, Abertay University". Both now match the timeline.
