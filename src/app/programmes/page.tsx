@@ -49,7 +49,7 @@ export default function ProgrammesPage() {
             <h2>A career that&rsquo;s <span className="grad">hiring.</span></h2>
             <p>
               Cyber security needs people who notice things, ask questions and look out for others —
-              skills many care-experienced young women already have. We add the technical know-how,
+              skills many young women already have. We add the technical know-how,
               the qualifications and the network to turn that into a career.
             </p>
           </div>

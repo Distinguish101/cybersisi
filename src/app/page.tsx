@@ -18,17 +18,17 @@ export default function HomePage() {
               <DecodeText text="with care." className="grad" delay={460} />
             </h1>
             <p className="lede">
-              A cyber sisterhood for care-experienced young women — and everyone raised by the village.
-              We build digital confidence, cyber literacy and emotional intelligence, together.
+              A cyber sisterhood for young women. We build digital confidence, cyber literacy and
+              emotional intelligence, together.
             </p>
             <div className="hero-cta">
-              <Link href="/get-involved#members" className="btn btn-primary">Join the village →</Link>
+              <Link href="/get-involved/member" className="btn btn-primary">Join the village →</Link>
               <Link href="/story" className="btn btn-ghost">Read our story</Link>
             </div>
             <div className="hero-meta">
               <div className="item"><span className="num">3 pillars</span><span className="lab">Confidence · Cyber · Care</span></div>
-              <div className="item"><span className="num">Ages 16–25</span><span className="lab">Care-experienced first</span></div>
-              <div className="item"><span className="num">Student-led</span><span className="lab">University of Dundee</span></div>
+              <div className="item"><span className="num">Ages 16–25</span><span className="lab">Open to all young women</span></div>
+              <div className="item"><span className="num">Student-led</span><span className="lab">Abertay University</span></div>
             </div>
           </div>
 

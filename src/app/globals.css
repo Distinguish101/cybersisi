@@ -335,3 +335,32 @@ footer{border-top:1px solid var(--line);padding:60px 0 40px;margin-top:90px;}
   .js .reveal{opacity:1;transform:none;}
 }
 :focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:6px;}
+
+/* Forms */
+.form{max-width:620px;display:flex;flex-direction:column;gap:22px;}
+.field{display:flex;flex-direction:column;gap:6px;}
+.field label{font-weight:700;font-size:15.5px;}
+.field .req{color:var(--magenta);}
+.hint{color:var(--muted);font-size:14px;}
+.field input,.field select,.field textarea{
+  font:inherit;font-size:16px;color:var(--cream);
+  background:rgba(28,14,59,.7);border:1.5px solid var(--line);border-radius:12px;
+  padding:12px 14px;width:100%;
+}
+.field textarea{resize:vertical;min-height:110px;}
+.field select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--cyan) 50%),linear-gradient(135deg,var(--cyan) 50%,transparent 50%);background-position:calc(100% - 20px) 50%,calc(100% - 15px) 50%;background-size:5px 5px;background-repeat:no-repeat;}
+.field select option{background:var(--ink-2);color:var(--cream);}
+.field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--cyan);outline-offset:1px;border-color:transparent;}
+.field [aria-invalid="true"]{border-color:var(--magenta);}
+.field .error{color:#FF8CC4;font-size:14.5px;font-weight:600;}
+.field-check{flex-direction:row;flex-wrap:wrap;align-items:flex-start;gap:12px;}
+.field-check input{width:22px;height:22px;margin-top:2px;flex-shrink:0;accent-color:var(--magenta);}
+.field-check label{flex:1;font-weight:500;color:var(--muted);font-size:15px;min-width:0;}
+.field-check .error{flex-basis:100%;}
+.form .btn{align-self:flex-start;}
+.form .btn:disabled{opacity:.6;cursor:wait;transform:none;}
+.form-alert{margin:0;border:1px solid rgba(255,61,154,.5);background:rgba(255,61,154,.1);border-radius:12px;padding:14px 18px;font-weight:600;}
+.form-success{max-width:620px;border:1px solid rgba(41,230,214,.4);background:rgba(41,230,214,.08);border-radius:var(--r);padding:34px;}
+.form-success h2{font-size:clamp(24px,3vw,32px);margin-bottom:12px;}
+.form-success p{color:var(--muted);margin:0 0 24px;}
+.hp{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden;}

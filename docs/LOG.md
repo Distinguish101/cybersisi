@@ -36,7 +36,7 @@ Newest stage at the bottom. Updated with every commit.
 ### Open decisions (not yet made)
 - [x] Final name: **CyberSis**. Decided in Stage 1.1. The repo is still called `cybersisi`.
 - [ ] How much of the founder's personal story stays public, especially details about her brother, who hasn't necessarily consented.
-- [ ] Permission to use "University of Dundee" on the site.
+- [ ] Permission to use "Abertay University" on the site (corrected from "University of Dundee" in Stage 3).
 - [ ] Whether Stripe Connect is needed at all.
 - [ ] Wording review with young people ("Her future is encrypted", "clever girl").
 
@@ -176,3 +176,134 @@ The `Submission` fields (first name, email, optional age range, organisation, me
 - The container is healthy and running Postgres 17.11.
 - The migration applied, and a round-trip test (insert → count → delete) through the generated client passed.
 - `tsc --noEmit` and `next build` pass, and `npm audit` reports 0 vulnerabilities.
+
+---
+
+## Stage 3 — Audience wording: open to all young women (2026-11-02) · branch `feature-1`
+
+### What we did
+Removed the "care-experienced" framing across the site. CyberSis is **for all young women aged 16–25**, whatever their background.
+
+| Where | Before → after |
+|---|---|
+| Home hero | "for care-experienced young women — and everyone raised by the village" → "for young women" |
+| Home stats | "Care-experienced first" → "Open to all young women" |
+| Footer, README, site description (SEO) | "care-experienced young women" → "young women" |
+| Join card (members) | "Care-experienced or raised by the village, aged 16–25?" → "A young woman aged 16–25?" |
+| FAQ "Who can join?" | Long care/migrant list → "Any young woman aged 16–25, whatever her background — including if you're new to the UK." |
+| Programmes "Why cyber" | "skills many care-experienced young women already have" → "skills many young women already have" |
+| Village page | First card is now "Young women, 16–25" (open to all). "Raised by the village" and "New to the UK" now refer to young women. New lede and description. |
+| Story | "care-experienced young women, and the young people the village has carried" → "young women". The timeline line "Care-experienced, but never without community" → "Never without community". |
+
+### Why
+- The owner's direction: the network is inclusive of all women, so it should say "women", not target care experience.
+- It also replaced "young people" with "young women" wherever "young people" implied a mixed-gender audience.
+
+### Kept deliberately
+- **"The village" concept** and the founder's own memorial lines ("Carried by the village", "the way Excelsis was carried"). They're about her story, not an eligibility rule.
+- **Ages 16–25** are unchanged, so the under-18 and Children's Code points still apply.
+
+### Verified
+- No remaining "care-experienced", "looked-after", "foster", "kinship" or "young people" wording in `src/` or the README.
+- `next build` passes.
+
+### Note
+- The founder story (`/story`) was edited at the owner's explicit request. Otherwise it stays as her own copy.
+
+### Addendum: founder's full name in the footer
+- The footer credit now reads "Founded by **Excelsis Ikem**" (was "Excelsis"), at the owner's request. The founder quote on `/story` now also shows "Excelsis Ikem".
+
+### Addendum: university corrected to Abertay
+- The founder studies at **Abertay University** (Dundee), not the University of Dundee. Corrected in four places: the home stats ("Student-led · Abertay University"), the story paragraph, the 2025 timeline entry and the founder sign-off ("BSc Cyber Security, Abertay University").
+- The open decision still applies: get Abertay's OK before launch, because naming the university can suggest it endorses CyberSis.
+
+---
+
+## Decisions for the forms stage (2026-11-02)
+
+The owner answered the four open questions from Stage 2:
+
+| Question | Decision | Notes |
+|---|---|---|
+| **Form fields** | **Minimal set + optional phone** | **Member:** first name, email, age range (16–17 / 18–25), how you heard (optional), message (optional), phone (optional). **Mentor:** name, email, job/role, LinkedIn (optional), message, phone (optional). **Partner:** name, email, organisation, interest (sponsor / host / fund / other), message, phone (optional). |
+| **Consent for ages 16–17** | **Her own consent** | In Scotland, 16-year-olds have legal capacity to agree to this themselves. The privacy wording must be plain-language (Children's Code). No adult sign-off step. |
+| **Retention** | **12 months after last contact** | Then deleted automatically, unless the person becomes a member or mentor. |
+| **Admins** | **Owner only** at launch | One admin account. More can be added later. |
+
+These change the proposed `Submission` schema from Stage 2. The forms stage will add a new migration (phone, role, LinkedIn, interest, how-heard, `lastContactedAt` for retention), plus a staff user table.
+- **Notification inbox and admin login:** the owner's personal email, kept in the local `.env` as `NOTIFY_EMAIL` and `ADMIN_EMAIL`, deliberately not in the repo. `.env.example` has placeholders.
+
+---
+
+## Stage 3.1 — Sharing previews through Cloudflare tunnel (2026-11-02)
+
+### Problem
+The `trycloudflare.com` link showed a different (broken-looking) site from localhost. The owner was running `next dev`, and Next 16's dev server blocks its own scripts for origins it doesn't recognise. The HTML loaded, but without JS the `.reveal` sections stayed hidden, the heading animation didn't play, the mobile menu didn't work and live reload was blocked.
+
+### Fix
+- Added `allowedDevOrigins: ["*.trycloudflare.com"]` to `next.config.ts`. This only affects `next dev`.
+- For sharing, the preferred route is still the production build (`npm run build` then `npm run start`). Remember to rebuild after every change.
+
+---
+
+## Stage 3.2 — Get-involved buttons all pink (2026-11-02)
+
+- "Become a mentor" and "Partner with us" changed from the outline (`btn-ghost`) style to the pink gradient (`btn-primary`), matching "Join the village". This was the owner's request, so all three audiences get an equally prominent button.
+- The change is in `JoinCards`, so it applies on both the home page and `/get-involved`. Contrast is unchanged: dark text on the gradient, AA.
+
+---
+
+## Stage 3.3 — Founder timeline: education corrected (2026-11-02)
+
+- On the `/story` timeline, **2025** now reads "Cyber Security studies begin at West Lothian College" (it said Abertay), and a new **2026** entry reads "Ethical Hacking studies begin at Abertay University". This was the owner's correction of the founder's education history.
+- Follow-up: both timeline entries now use the past tense ("began"). The story paragraph now reads "Today she studies **Ethical Hacking at Abertay University**", and the founder sign-off reads "BSc Ethical Hacking, Abertay University". Both now match the timeline.
+
+---
+
+## Stage 4 — Register-interest forms (2026-11-02) · branch `feature-1`
+
+### What we did
+- **Three form pages:** `/get-involved/member`, `/get-involved/mentor` and `/get-involved/partner`. They're one dynamic route with the three pages pre-built, and any other value returns 404. Every "Join the village", "Become a mentor" and "Partner with us" button, in the header, on the home page and in the footer, now links to these forms instead of `mailto:`.
+- **Fields** match the owner's decisions: minimal, plus an optional phone number. The consent tick box is required and records `consentAt`. Its wording explains the 12-month retention and links to the privacy page.
+- **Validation** uses zod on the server (`src/lib/forms.ts`): it trims names, lowercases emails, checks the formats of phone numbers and LinkedIn links, and enforces length limits. The form shows an error beside each field and keeps what was typed.
+- **Spam protection:**
+  - a hidden honeypot field
+  - a minimum 3-second fill time, only when JS is running, so no-JS users aren't lost
+  - a per-IP rate limit of 5 submissions every 10 minutes, held in memory only
+  - Bots get a fake "thank you" so they don't learn what stopped them.
+- **Email alert** via Resend to `NOTIFY_EMAIL`: just "{first name} registered interest as a {type}". Contact details stay in the database and out of inboxes. It's skipped until `RESEND_API_KEY` is set, and a failed email never loses a submission.
+- **Database migration `forms_fields`:** adds `phone`, `howHeard`, `role`, `linkedin`, `interest` (new `PartnerInterest` enum) and `lastContactedAt`, plus an `ACCEPTED` status (people with that status are exempt from the 12-month deletion). The change only adds nullable columns, so it's safe; the SQL was reviewed before applying.
+- **Privacy page:** a plain-language summary of what each form collects, why, the 12-month retention, the first-name-only email alert, and cookies. Still labelled **Draft**. Controller details, hosting location and full UK GDPR rights remain TODO.
+- **Accessibility:**
+  - every field has a label
+  - required fields are marked
+  - errors are linked to their fields
+  - the error summary is announced to screen readers (`role="alert"`)
+  - browsers can autofill the fields
+  - the consent box has a large tap target
+  - the forms work without JS
+
+### Dependencies
+- `zod` 4 (validation), `resend` 6 (email), and `tsx` (dev, for running TS scripts and tests).
+- **npm install scripts:** `esbuild` (used by tsx) wanted to run one. Its binary already arrives as a separate platform package, so the script was **denied** (`allowScripts.esbuild: false`), and tsx works without it.
+
+### Why
+- Owner decisions from the previous step. The forms replace `mailto:` links, which couldn't enforce minimal data, consent or retention.
+
+### Verified
+- **Handler tests** (10 cases, run directly against local Postgres):
+  - valid member, mentor and partner entries were saved with trimmed and lowercased values
+  - missing fields, a bad email, bad LinkedIn, bad phone, bad interest and an unknown type returned the right errors
+  - the honeypot and too-fast submissions returned a fake success and saved nothing
+- **End to end** against `next start`:
+  - all three pages return 200, and `/get-involved/nope` returns 404
+  - a real form post without JS saved the row
+  - the honeypot post saved nothing
+  - the 6th post within 10 minutes was rate-limited
+- Test rows were deleted afterwards. `next build` and `tsc` pass.
+- **Not yet tested:** sending a real email, because there's no Resend key yet.
+
+### Still to do before launch
+- **Next stage:** the admin page (login for the owner, list, mark contacted or accepted, delete) and the **automatic 12-month deletion job**. The privacy page already promises the deletion.
+- **Resend:** an API key, and verifying `cybersis.org` so alerts can send from it.
+- **`hello@cybersis.org`** must be a working inbox, because the privacy page tells people to email it to have their data deleted.

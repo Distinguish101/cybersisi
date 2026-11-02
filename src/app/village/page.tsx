@@ -4,13 +4,13 @@ import PageHero from "@/components/PageHero";
 
 export const metadata: Metadata = {
   title: "The village",
-  description: "Who CyberSis is for: care-experienced young women, young people raised by the village, those new to the UK, and the mentors and allies who support them.",
+  description: "Who CyberSis is for: young women aged 16–25 from every background, and the mentors and allies who support them.",
 };
 
 const audiences = [
-  { colour: "var(--magenta)", title: "Care-experienced young women", body: "If you've been looked-after, fostered, kinship-cared, or have grown up navigating the care system — this network was built first for you." },
-  { colour: "var(--violet)", title: "Raised by the village", body: "For young people carried by community, extended family, mentors and neighbours when a parent could not be there. Your village is welcome here." },
-  { colour: "var(--cyan)", title: "New to the UK & finding their feet", body: "Migrant and refugee-background young people building a future in a new country, one skill and one friendship at a time." },
+  { colour: "var(--magenta)", title: "Young women, 16–25", body: "Whatever your background and whatever your story — if you're curious about tech, this network was built for you." },
+  { colour: "var(--violet)", title: "Raised by the village", body: "For young women carried by community, extended family, mentors and neighbours. Your village is welcome here." },
+  { colour: "var(--cyan)", title: "New to the UK & finding their feet", body: "Young women building a future in a new country, one skill and one friendship at a time." },
   { colour: "var(--gold)", title: "Mentors, carers & allies", body: "Women in tech, social workers, teachers and community champions who want to pour into the next generation. Come and be the village." },
 ];
 
@@ -20,7 +20,7 @@ export default function VillagePage() {
       <PageHero
         eyebrow="The village"
         title={<>Who CyberSis is <span className="grad">for.</span></>}
-        lede="We lead with care-experienced young women — and we keep the door wide, because the village is bigger than any one of us."
+        lede="Every young woman is welcome here — because the village is bigger than any one of us."
       />
 
       <section>
