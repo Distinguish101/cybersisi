@@ -22,7 +22,7 @@ export default function JoinCards() {
           Give an hour a month. Share your path, answer the questions, and be the woman in cyber you
           once needed.
         </p>
-        <a href={mailto("I want to mentor")} className="btn btn-ghost">
+        <a href={mailto("I want to mentor")} className="btn btn-primary">
           Become a mentor
         </a>
       </div>
@@ -33,7 +33,7 @@ export default function JoinCards() {
           Universities, employers and funders: help us open doors at scale. Sponsor a circle, host a
           lab, or back the launch.
         </p>
-        <a href={mailto("Partnership enquiry")} className="btn btn-ghost">
+        <a href={mailto("Partnership enquiry")} className="btn btn-primary">
           Partner with us
         </a>
       </div>

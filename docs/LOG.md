@@ -243,3 +243,10 @@ The `trycloudflare.com` link showed a different (broken-looking) site from local
 ### Fix
 - Added `allowedDevOrigins: ["*.trycloudflare.com"]` to `next.config.ts`. This only affects `next dev`.
 - For sharing, the preferred route is still the production build (`npm run build` then `npm run start`). Remember to rebuild after every change.
+
+---
+
+## Stage 3.2 — Get-involved buttons all pink (2026-11-02)
+
+- "Become a mentor" and "Partner with us" changed from the outline (`btn-ghost`) style to the pink gradient (`btn-primary`), matching "Join the village". This was the owner's request, so all three audiences get an equally prominent button.
+- The change is in `JoinCards`, so it applies on both the home page and `/get-involved`. Contrast is unchanged: dark text on the gradient, AA.
