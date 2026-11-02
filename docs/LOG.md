@@ -216,3 +216,30 @@ Removed the "care-experienced" framing across the site. CyberSis is **for all yo
 ### Addendum: university corrected to Abertay
 - The founder studies at **Abertay University** (Dundee), not the University of Dundee. Corrected in four places: the home stats ("Student-led · Abertay University"), the story paragraph, the 2025 timeline entry and the founder sign-off ("BSc Cyber Security, Abertay University").
 - The open decision still applies: get Abertay's OK before launch, because naming the university can suggest it endorses CyberSis.
+
+---
+
+## Decisions for the forms stage (2026-11-02)
+
+The owner answered the four open questions from Stage 2:
+
+| Question | Decision | Notes |
+|---|---|---|
+| **Form fields** | **Minimal set + optional phone** | **Member:** first name, email, age range (16–17 / 18–25), how you heard (optional), message (optional), phone (optional). **Mentor:** name, email, job/role, LinkedIn (optional), message, phone (optional). **Partner:** name, email, organisation, interest (sponsor / host / fund / other), message, phone (optional). |
+| **Consent for ages 16–17** | **Her own consent** | In Scotland, 16-year-olds have legal capacity to agree to this themselves. The privacy wording must be plain-language (Children's Code). No adult sign-off step. |
+| **Retention** | **12 months after last contact** | Then deleted automatically, unless the person becomes a member or mentor. |
+| **Admins** | **Owner only** at launch | One admin account. More can be added later. |
+
+These change the proposed `Submission` schema from Stage 2. The forms stage will add a new migration (phone, role, LinkedIn, interest, how-heard, `lastContactedAt` for retention), plus a staff user table.
+- **Notification inbox and admin login:** the owner's personal email, kept in the local `.env` as `NOTIFY_EMAIL` and `ADMIN_EMAIL`, deliberately not in the repo. `.env.example` has placeholders.
+
+---
+
+## Stage 3.1 — Sharing previews through Cloudflare tunnel (2026-11-02)
+
+### Problem
+The `trycloudflare.com` link showed a different (broken-looking) site from localhost. The owner was running `next dev`, and Next 16's dev server blocks its own scripts for origins it doesn't recognise. The HTML loaded, but without JS the `.reveal` sections stayed hidden, the heading animation didn't play, the mobile menu didn't work and live reload was blocked.
+
+### Fix
+- Added `allowedDevOrigins: ["*.trycloudflare.com"]` to `next.config.ts`. This only affects `next dev`.
+- For sharing, the preferred route is still the production build (`npm run build` then `npm run start`). Remember to rebuild after every change.
