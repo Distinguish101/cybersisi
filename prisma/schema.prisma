@@ -18,23 +18,37 @@ enum SubmissionType {
 enum SubmissionStatus {
   NEW
   CONTACTED
+  ACCEPTED // became a member/mentor/partner — exempt from the 12-month clean-up
   CLOSED
 }
 
-// Register-interest form entries. Fields are deliberately minimal (Children's
-// Code / data minimisation) — PROPOSED, to be confirmed in the forms stage.
+enum PartnerInterest {
+  SPONSOR
+  HOST
+  FUND
+  OTHER
+}
+
+// Register-interest form entries. Fields agreed with the owner (docs/LOG.md,
+// "Decisions for the forms stage") — keep them minimal: members can be 16–17.
 model Submission {
-  id           String           @id @default(cuid())
-  type         SubmissionType
-  status       SubmissionStatus @default(NEW)
-  firstName    String
-  email        String
-  ageRange     String? // members only
-  organisation String? // partners only
-  message      String?
-  consentAt    DateTime // when they agreed to the privacy notice
-  createdAt    DateTime         @default(now())
-  updatedAt    DateTime         @updatedAt
+  id              String           @id @default(cuid())
+  type            SubmissionType
+  status          SubmissionStatus @default(NEW)
+  firstName       String
+  email           String
+  phone           String?
+  ageRange        String? // members: "16-17" | "18-25"
+  howHeard        String? // members
+  role            String? // mentors: job / role
+  linkedin        String? // mentors
+  organisation    String? // partners
+  interest        PartnerInterest? // partners
+  message         String?
+  consentAt       DateTime // when they agreed to the privacy notice
+  lastContactedAt DateTime? // retention: deleted 12 months after this (or createdAt)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
 
   @@index([type, status])
   @@index([createdAt]) // retention clean-up

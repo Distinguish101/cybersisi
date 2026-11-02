@@ -34,7 +34,7 @@ export default function SiteHeader() {
         <nav aria-label="Main">
           <ul className="nav-links">{links}</ul>
         </nav>
-        <Link href="/get-involved#members" className="btn btn-primary">
+        <Link href="/get-involved/member" className="btn btn-primary">
           Join the village →
         </Link>
         <button
@@ -49,7 +49,7 @@ export default function SiteHeader() {
       <nav id="mobile-menu" aria-label="Mobile" className={`mobile-menu${open ? " open" : ""}`}>
         <div className="wrap">
           <ul>{links}</ul>
-          <Link href="/get-involved#members" className="btn btn-primary">
+          <Link href="/get-involved/member" className="btn btn-primary">
             Join the village →
           </Link>
         </div>

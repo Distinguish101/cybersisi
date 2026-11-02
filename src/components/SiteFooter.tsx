@@ -27,8 +27,8 @@ export default function SiteFooter() {
             <ul>
               <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
               <li><Link href="/contact">Contact &amp; FAQs</Link></li>
-              <li><Link href="/get-involved#mentors">Mentor with us</Link></li>
-              <li><Link href="/get-involved#partners">Partner &amp; fund</Link></li>
+              <li><Link href="/get-involved/mentor">Mentor with us</Link></li>
+              <li><Link href="/get-involved/partner">Partner &amp; fund</Link></li>
             </ul>
           </div>
           <div>

@@ -22,7 +22,7 @@ export default function HomePage() {
               emotional intelligence, together.
             </p>
             <div className="hero-cta">
-              <Link href="/get-involved#members" className="btn btn-primary">Join the village →</Link>
+              <Link href="/get-involved/member" className="btn btn-primary">Join the village →</Link>
               <Link href="/story" className="btn btn-ghost">Read our story</Link>
             </div>
             <div className="hero-meta">

@@ -1,6 +1,5 @@
-import { mailto } from "@/lib/site";
+import Link from "next/link";
 
-// TODO(forms stage): replace mailto links with the three registration forms.
 export default function JoinCards() {
   return (
     <div className="join-grid">
@@ -11,9 +10,9 @@ export default function JoinCards() {
           A young woman aged 16–25? Join free and grow your confidence, cyber skills and your
           sisterhood.
         </p>
-        <a href={mailto("I want to join the village")} className="btn btn-primary">
+        <Link href="/get-involved/member" className="btn btn-primary">
           Join the village →
-        </a>
+        </Link>
       </div>
       <div className="join-card reveal" id="mentors">
         <span className="kicker">For women in tech</span>
@@ -22,9 +21,9 @@ export default function JoinCards() {
           Give an hour a month. Share your path, answer the questions, and be the woman in cyber you
           once needed.
         </p>
-        <a href={mailto("I want to mentor")} className="btn btn-primary">
+        <Link href="/get-involved/mentor" className="btn btn-primary">
           Become a mentor
-        </a>
+        </Link>
       </div>
       <div className="join-card reveal" id="partners">
         <span className="kicker">For organisations</span>
@@ -33,9 +32,9 @@ export default function JoinCards() {
           Universities, employers and funders: help us open doors at scale. Sponsor a circle, host a
           lab, or back the launch.
         </p>
-        <a href={mailto("Partnership enquiry")} className="btn btn-primary">
+        <Link href="/get-involved/partner" className="btn btn-primary">
           Partner with us
-        </a>
+        </Link>
       </div>
     </div>
   );

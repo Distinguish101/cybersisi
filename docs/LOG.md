@@ -257,3 +257,53 @@ The `trycloudflare.com` link showed a different (broken-looking) site from local
 
 - On the `/story` timeline, **2025** now reads "Cyber Security studies begin at West Lothian College" (it said Abertay), and a new **2026** entry reads "Ethical Hacking studies begin at Abertay University". This was the owner's correction of the founder's education history.
 - Follow-up: both timeline entries now use the past tense ("began"). The story paragraph now reads "Today she studies **Ethical Hacking at Abertay University**", and the founder sign-off reads "BSc Ethical Hacking, Abertay University". Both now match the timeline.
+
+---
+
+## Stage 4 — Register-interest forms (2026-11-02) · branch `feature-1`
+
+### What we did
+- **Three form pages:** `/get-involved/member`, `/get-involved/mentor` and `/get-involved/partner`. They're one dynamic route with the three pages pre-built, and any other value returns 404. Every "Join the village", "Become a mentor" and "Partner with us" button, in the header, on the home page and in the footer, now links to these forms instead of `mailto:`.
+- **Fields** match the owner's decisions: minimal, plus an optional phone number. The consent tick box is required and records `consentAt`. Its wording explains the 12-month retention and links to the privacy page.
+- **Validation** uses zod on the server (`src/lib/forms.ts`): it trims names, lowercases emails, checks the formats of phone numbers and LinkedIn links, and enforces length limits. The form shows an error beside each field and keeps what was typed.
+- **Spam protection:**
+  - a hidden honeypot field
+  - a minimum 3-second fill time, only when JS is running, so no-JS users aren't lost
+  - a per-IP rate limit of 5 submissions every 10 minutes, held in memory only
+  - Bots get a fake "thank you" so they don't learn what stopped them.
+- **Email alert** via Resend to `NOTIFY_EMAIL`: just "{first name} registered interest as a {type}". Contact details stay in the database and out of inboxes. It's skipped until `RESEND_API_KEY` is set, and a failed email never loses a submission.
+- **Database migration `forms_fields`:** adds `phone`, `howHeard`, `role`, `linkedin`, `interest` (new `PartnerInterest` enum) and `lastContactedAt`, plus an `ACCEPTED` status (people with that status are exempt from the 12-month deletion). The change only adds nullable columns, so it's safe; the SQL was reviewed before applying.
+- **Privacy page:** a plain-language summary of what each form collects, why, the 12-month retention, the first-name-only email alert, and cookies. Still labelled **Draft**. Controller details, hosting location and full UK GDPR rights remain TODO.
+- **Accessibility:**
+  - every field has a label
+  - required fields are marked
+  - errors are linked to their fields
+  - the error summary is announced to screen readers (`role="alert"`)
+  - browsers can autofill the fields
+  - the consent box has a large tap target
+  - the forms work without JS
+
+### Dependencies
+- `zod` 4 (validation), `resend` 6 (email), and `tsx` (dev, for running TS scripts and tests).
+- **npm install scripts:** `esbuild` (used by tsx) wanted to run one. Its binary already arrives as a separate platform package, so the script was **denied** (`allowScripts.esbuild: false`), and tsx works without it.
+
+### Why
+- Owner decisions from the previous step. The forms replace `mailto:` links, which couldn't enforce minimal data, consent or retention.
+
+### Verified
+- **Handler tests** (10 cases, run directly against local Postgres):
+  - valid member, mentor and partner entries were saved with trimmed and lowercased values
+  - missing fields, a bad email, bad LinkedIn, bad phone, bad interest and an unknown type returned the right errors
+  - the honeypot and too-fast submissions returned a fake success and saved nothing
+- **End to end** against `next start`:
+  - all three pages return 200, and `/get-involved/nope` returns 404
+  - a real form post without JS saved the row
+  - the honeypot post saved nothing
+  - the 6th post within 10 minutes was rate-limited
+- Test rows were deleted afterwards. `next build` and `tsc` pass.
+- **Not yet tested:** sending a real email, because there's no Resend key yet.
+
+### Still to do before launch
+- **Next stage:** the admin page (login for the owner, list, mark contacted or accepted, delete) and the **automatic 12-month deletion job**. The privacy page already promises the deletion.
+- **Resend:** an API key, and verifying `cybersis.org` so alerts can send from it.
+- **`hello@cybersis.org`** must be a working inbox, because the privacy page tells people to email it to have their data deleted.
