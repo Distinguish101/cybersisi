@@ -363,4 +363,12 @@ footer{border-top:1px solid var(--line);padding:60px 0 40px;margin-top:90px;}
 .form-success{max-width:620px;border:1px solid rgba(41,230,214,.4);background:rgba(41,230,214,.08);border-radius:var(--r);padding:34px;}
 .form-success h2{font-size:clamp(24px,3vw,32px);margin-bottom:12px;}
 .form-success p{color:var(--muted);margin:0 0 24px;}
+/* Radio and checkbox groups */
+.choices{border:0;margin:0;padding:0;min-width:0;}
+.choices legend{font-weight:700;font-size:15.5px;padding:0;margin-bottom:6px;}
+.choice{display:flex;align-items:flex-start;gap:12px;font-weight:500;font-size:15.5px;padding:10px 14px;border:1px solid rgba(255,255,255,.14);border-radius:12px;cursor:pointer;}
+.choice:has(input:checked){border-color:var(--cyan);background:rgba(41,230,214,.07);}
+.choice:has(input:focus-visible){outline:2px solid var(--cyan);outline-offset:1px;}
+.choice input{width:20px;height:20px;margin:1px 0 0;flex-shrink:0;accent-color:var(--magenta);}
+.choices:has([aria-invalid="true"]) .choice{border-color:rgba(255,61,154,.6);}
 .hp{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden;}

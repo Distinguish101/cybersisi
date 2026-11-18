@@ -1,8 +1,8 @@
 export const site = {
   name: "CyberSis",
-  tagline: "Coded with care",
-  url: "https://cybersis.org",
-  email: "hello@cybersis.org",
+  tagline: "Rewrite the code",
+  url: "https://cybersis.uk",
+  email: "hello@cybersis.uk",
   description:
     "CyberSis is a cyber sisterhood for young women. Building digital confidence, cyber literacy and emotional intelligence. Founded in Dundee, Scotland. Launching May 2027.",
 };

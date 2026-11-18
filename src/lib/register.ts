@@ -1,7 +1,7 @@
 import "server-only";
 import { db } from "./db";
 import { notifyNewSubmission } from "./email";
-import { registrationSchema, type FormState } from "./forms";
+import { MULTI_FIELDS, onlyAskedAnswers, registrationSchema, type FormState, type FormValues } from "./forms";
 
 const MIN_FILL_MS = 3000; // faster than this is almost certainly a bot
 
@@ -15,9 +15,13 @@ export async function handleRegistration(formData: FormData): Promise<FormState>
   const startedAt = Number(formData.get("startedAt"));
   if (startedAt && Date.now() - startedAt < MIN_FILL_MS) return { status: "success" };
 
-  const raw = Object.fromEntries(
-    [...formData.entries()].filter(([k, v]) => typeof v === "string" && !["website", "startedAt"].includes(k)),
-  ) as Record<string, string>;
+  // Text fields arrive once; checkbox groups (MULTI_FIELDS) arrive as one entry per tick.
+  const raw: FormValues = {};
+  for (const [k, v] of formData.entries()) {
+    if (typeof v !== "string" || k === "website" || k === "startedAt" || k.startsWith("$")) continue;
+    if ((MULTI_FIELDS as readonly string[]).includes(k)) raw[k] = [...((raw[k] as string[] | undefined) ?? []), v];
+    else raw[k] = v;
+  }
 
   const parsed = registrationSchema.safeParse(raw);
   if (!parsed.success) {
@@ -29,7 +33,7 @@ export async function handleRegistration(formData: FormData): Promise<FormState>
     return { status: "error", message: "Please check the highlighted fields.", fieldErrors, values: raw };
   }
 
-  const { consent: _consent, ...data } = parsed.data;
+  const { consent: _consent, ...data } = onlyAskedAnswers(parsed.data);
   try {
     await db.submission.create({ data: { ...data, consentAt: new Date() } });
   } catch (err) {
@@ -39,7 +43,7 @@ export async function handleRegistration(formData: FormData): Promise<FormState>
 
   // The submission is saved; a failed alert email mustn't fail the form.
   try {
-    await notifyNewSubmission(data.type, data.firstName);
+    await notifyNewSubmission(data.type, data.name);
   } catch (err) {
     console.error("registration: notify failed", err instanceof Error ? err.message : "unknown");
   }

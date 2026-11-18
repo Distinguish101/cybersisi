@@ -22,33 +22,98 @@ enum SubmissionStatus {
   CLOSED
 }
 
-enum PartnerInterest {
-  SPONSOR
-  HOST
-  FUND
+// Who filled in the member form
+enum SubmitterRole {
+  SELF // the young woman joining
+  PARENT // parent or guardian
+  PROFESSIONAL // teacher or youth worker
+}
+
+enum MemberInterest {
+  ONLINE_SAFETY
+  CYBER_BASICS
+  ETHICAL_HACKING
+  CAREERS
+}
+
+enum MentorSkill {
+  SECURITY // security and ethical hacking
+  SOFTWARE_CLOUD
+  CAREERS // careers and interviews
+  TALKS // talks and workshops
+}
+
+enum MentorTime {
+  HOUR_A_MONTH
+  TWO_HOURS_A_MONTH
+  HOUR_A_WEEK
+  ONE_OFF
+}
+
+enum MentorFormat {
+  ONLINE
+  IN_PERSON
+  EITHER
+}
+
+enum OrganisationType {
+  SCHOOL // school or college
+  WOMEN_YOUTH // women's or youth organisation
+  COMPANY // company or employer
+  FUNDER // funder or foundation
+  PUBLIC_BODY // local authority or public body
   OTHER
+}
+
+enum PartnerHelp {
+  FUNDING
+  SPACE // a space for sessions
+  REFERRALS // refer young women
+  MENTORS_JOBS // mentors, work experience or jobs
+}
+
+enum FundingRange {
+  UNDER_5K
+  FROM_5K_TO_25K
+  FROM_25K_TO_100K
+  OVER_100K
+  DISCUSS
 }
 
 // Register-interest form entries. Fields agreed with the owner (docs/LOG.md,
 // "Decisions for the forms stage") — keep them minimal: members can be 16–17.
 model Submission {
-  id              String           @id @default(cuid())
-  type            SubmissionType
-  status          SubmissionStatus @default(NEW)
-  firstName       String
-  email           String
-  phone           String?
-  ageRange        String? // members: "16-17" | "18-25"
-  howHeard        String? // members
-  role            String? // mentors: job / role
-  linkedin        String? // mentors
-  organisation    String? // partners
-  interest        PartnerInterest? // partners
-  message         String?
-  consentAt       DateTime // when they agreed to the privacy notice
-  lastContactedAt DateTime? // retention: deleted 12 months after this (or createdAt)
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
+  id               String            @id @default(cuid())
+  type             SubmissionType
+  status           SubmissionStatus  @default(NEW)
+  name             String // person joining (member) / the person filling it in (mentor, partner)
+  email            String
+  phone            String?
+  // members
+  submitterRole    SubmitterRole?
+  contactName      String? // the adult filling it in, if not the person joining
+  ageRange         String? // "16-17" | "18-25"
+  area             String? // town or postcode area
+  interests        MemberInterest[]
+  howHeard         String?
+  // mentors
+  role             String? // job title and employer
+  linkedin         String?
+  mentorSkills     MentorSkill[]
+  mentorTime       MentorTime?
+  mentorFormat     MentorFormat?
+  // partners
+  organisation     String?
+  organisationType OrganisationType?
+  partnerHelp      PartnerHelp[]
+  fundingRange     FundingRange? // only when partnerHelp has FUNDING
+  spaceDetails     String? // only when partnerHelp has SPACE
+  // everyone
+  message          String?
+  consentAt        DateTime // when they agreed to the privacy notice
+  lastContactedAt  DateTime? // retention: deleted 12 months after this (or createdAt)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
 
   @@index([type, status])
   @@index([createdAt]) // retention clean-up

@@ -1,10 +1,10 @@
 # cybersisi
 
-Website for **CyberSis** — *Coded with care*: a cyber sisterhood for young women. Dundee, Scotland · launching May 2027.
+Website for **CyberSis** — *Rewrite the code*: a cyber sisterhood for young women. Dundee, Scotland · launching May 2027.
 
 ## Getting started
 
-Requires Node 20.9+ and Docker Desktop (for the local database).
+Requires Node 24 (npm 11) and Docker Desktop (for the local database).
 
 ```bash
 npm install
@@ -24,7 +24,11 @@ npm run dev             # http://localhost:3000
 
 On Windows PowerShell, use `npm.cmd` if `npm` is blocked by the execution policy.
 
-Project history and decisions: [docs/LOG.md](docs/LOG.md).
+Project history and decisions: [docs/LOG.md](docs/LOG.md). Deploying: [docs/DEPLOY.md](docs/DEPLOY.md).
+
+## Deploy (MVP)
+
+Push to `main` → GitHub Actions typechecks, builds arm64 images to GHCR, runs `prisma migrate deploy` as a k8s Job, rolls out to k3s (namespace `cybersis`, 1 replica) and smoke-tests the site. One-time setup and the full before/after checklist are in [docs/DEPLOY.md](docs/DEPLOY.md). Health check: `/api/health` (no DB; `?ready=1` checks the DB, not for probes).
 
 ## Tech stack
 

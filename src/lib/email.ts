@@ -11,14 +11,16 @@ const LABEL: Record<RegistrationType, string> = {
 // Alerts the owner to a new submission. Deliberately contains only the type and
 // first name — contact details stay in the database, not in an inbox.
 // Skipped (returns false) when RESEND_API_KEY or NOTIFY_EMAIL isn't set.
-export async function notifyNewSubmission(type: RegistrationType, firstName: string): Promise<boolean> {
+export async function notifyNewSubmission(type: RegistrationType, name: string): Promise<boolean> {
+  // The forms now ask for a full name; the alert still carries the first name only.
+  const firstName = name.trim().split(/\s+/)[0];
   const apiKey = process.env.RESEND_API_KEY;
   const to = process.env.NOTIFY_EMAIL;
   if (!apiKey || !to) return false;
 
   const resend = new Resend(apiKey);
   const { error } = await resend.emails.send({
-    // Until cybersis.org is verified in Resend, only onboarding@resend.dev works.
+    // Until cybersis.uk is verified in Resend, only onboarding@resend.dev works.
     from: process.env.RESEND_FROM || "CyberSis <onboarding@resend.dev>",
     to,
     subject: `New ${LABEL[type]} registration — CyberSis`,

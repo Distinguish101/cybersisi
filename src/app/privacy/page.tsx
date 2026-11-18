@@ -30,10 +30,21 @@ export default function PrivacyPage() {
             <h2>When you register your interest</h2>
             <p>We only ask for what we need to get back to you:</p>
             <ul>
-              <li><strong>Everyone:</strong> your first name and email, and a phone number if you choose to give one.</li>
-              <li><strong>Members:</strong> your age range (16–17 or 18–25), and optionally how you heard about us and anything you&rsquo;d like us to know.</li>
-              <li><strong>Mentors:</strong> your job or role, optionally your LinkedIn, and why you&rsquo;d like to mentor.</li>
-              <li><strong>Partners:</strong> your organisation, how you&rsquo;d like to help, and what you have in mind.</li>
+              <li><strong>Everyone:</strong> a name and email, and a phone number if you choose to give one.</li>
+              <li>
+                <strong>Members:</strong> who is filling in the form (the young woman joining, a parent or guardian,
+                or a teacher or youth worker), the name of the person joining and your name if different, her age
+                range (16–17 or 18–25), a town or postcode area, what she&rsquo;s interested in, and optionally how
+                you heard about us and anything you&rsquo;d like us to know.
+              </li>
+              <li>
+                <strong>Mentors:</strong> your job title and employer, what you can help with, the time you can give,
+                online or in person, and optionally your LinkedIn and anything you&rsquo;d like us to know.
+              </li>
+              <li>
+                <strong>Partners:</strong> your organisation and what kind it is, how you&rsquo;d like to help, an
+                approximate funding amount or details of a space if you offer them, and optionally anything to add.
+              </li>
             </ul>
             <p>
               We use these details only to contact you about getting involved with CyberSis. We never sell

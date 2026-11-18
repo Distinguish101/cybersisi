@@ -12,10 +12,10 @@ export default function HomePage() {
           <div>
             <span className="eyebrow">Launching May 2027 · Dundee, Scotland</span>
             <h1>
-              <span className="sr-only">Coded with care.</span>
-              <DecodeText text="Coded" delay={200} />
+              <span className="sr-only">Rewrite the code.</span>
+              <DecodeText text="Rewrite" delay={200} />
               <br />
-              <DecodeText text="with care." className="grad" delay={460} />
+              <DecodeText text="the code." className="grad" delay={460} />
             </h1>
             <p className="lede">
               A cyber sisterhood for young women. We build digital confidence, cyber literacy and

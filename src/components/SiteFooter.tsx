@@ -10,7 +10,7 @@ export default function SiteFooter() {
           <div>
             <Brand />
             <p>
-              A cyber sisterhood for young women. Coded with care, in Dundee, Scotland.
+              A cyber sisterhood for young women in Dundee, Scotland. Rewrite the code.
             </p>
           </div>
           <div>

@@ -20,3 +20,6 @@ Thumbs.db
 
 # prisma generated client
 src/generated/
+
+# filled-in k8s secret: never commit
+k8s/secret.yaml

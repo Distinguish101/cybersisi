@@ -1,0 +1,30 @@
+# Runs `prisma migrate deploy` once per release, BEFORE the new app version
+# rolls out. It only applies committed migrations, never invents changes, and
+# never prompts. (Never `migrate dev` against Neon.)
+#
+# Uses the `migrate` image: the Dockerfile's builder stage, which still has the
+# Prisma CLI, prisma.config.ts and prisma/migrations. prisma.config.ts reads
+# DIRECT_URL (Neon's non-pooled URL: the pooler can't hold migration locks).
+#
+# Jobs don't clean themselves up, so the deploy workflow deletes and re-applies it.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: cybersis-migrate
+  namespace: cybersis
+spec:
+  backoffLimit: 2
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: migrate
+          image: ghcr.io/distinguish101/cybersisi:migrate
+          # `migrate` is a floating tag overwritten on every push. With the
+          # default IfNotPresent the node reuses its cached copy and new
+          # migrations are silently skipped (this bit IdistinguishR). Always re-pull.
+          imagePullPolicy: Always
+          command: ["npx", "prisma", "migrate", "deploy"]
+          envFrom:
+            - secretRef:
+                name: cybersis-secrets

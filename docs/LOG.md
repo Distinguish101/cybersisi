@@ -307,3 +307,74 @@ The `trycloudflare.com` link showed a different (broken-looking) site from local
 - **Next stage:** the admin page (login for the owner, list, mark contacted or accepted, delete) and the **automatic 12-month deletion job**. The privacy page already promises the deletion.
 - **Resend:** an API key, and verifying `cybersis.org` so alerts can send from it.
 - **`hello@cybersis.org`** must be a working inbox, because the privacy page tells people to email it to have their data deleted.
+
+---
+
+## Stage 5 — Deploy plumbing for the MVP (2026-11-17) · branch `feature-1`
+
+### What we did
+- **Deploy checklist** `docs/DEPLOY.md`: before, during and after deploy, split into code, owner and content tasks. It's the single list to tick off from here to launch.
+- **`Dockerfile`** (three stages: deps, builder, runner) on **Node 24**, matching local dev. npm 11 honours `allowScripts`. Non-root user, standalone output. Prisma 7 with the `pg` adapter needs no engine binary at runtime, so the runner only copies the standalone bundle. The **builder stage doubles as the `migrate` image** (it has the Prisma CLI and the migrations).
+- **`/api/health`**: no database by default (used by the probes and the uptime monitor). `?ready=1` also runs `SELECT 1`, for people only, and logs only the error name.
+- **`k8s/`**: namespace `cybersis`, deployment, service, Traefik ingress with an HTTP→HTTPS redirect, migration Job, secret template. It reuses the cluster-wide `letsencrypt-prod` issuer that IdistinguishR created, so it runs on the same Oracle VM.
+- **`.github/workflows/deploy.yml`**: typecheck on PRs. On push to `main`: build arm64 images on a native ARM runner, push to GHCR, run the migration Job, roll out, then smoke-test `/api/health`, `/`, a form page and one `?ready=1`. Plus **Dependabot**.
+- **Security headers** (HSTS 180 days, nosniff, frame DENY, referrer and permissions policies) and `poweredByHeader: false`. No CSP yet: the inline `html.js` script needs handling first.
+- **Rate-limiter fix:** it used the *leftmost* `X-Forwarded-For` entry, which the client controls, so changing that header dodged the limit. It now uses the *rightmost* entry (the address Traefik saw), via `clientIp()` in `src/lib/rate-limit.ts`.
+- **Next 16.4.3 → 16.4.6.** The fix for a moderate advisory (GHSA-mfr8-8qww-v76h, `'use cache'` with `unstable_cache`, which we don't use). Next had also started refusing to build on the flagged version. `npm audit`: 0.
+- `.gitignore` now has `k8s/secret.yaml`. `.env.example` documents `RESEND_FROM`.
+
+### Decisions (and why)
+- **1 replica, no autoscaler.** The rate limiter is in memory, so 2 pods would mean 2× the limit. Traffic is tiny. Revisit when the limiter moves to shared storage.
+- **The same VM as IdistinguishR**, in its own namespace. Traefik and cert-manager are already there, so it costs nothing. The IdistinguishR walkthrough (Notion) was used as the template, and its lessons were applied: no database in probes (that kept Neon awake and caused its outage), `imagePullPolicy: Always` on the migrate Job, migrations before rollout, a smoke test.
+- **Migrations run as a k8s Job in CI**, not at pod start, so pods can't race each other. If a migration fails the deploy stops and the old pod keeps serving.
+- **The admin page and the deletion job can follow the first deploy.** Nothing can be 12 months old until a year after launch. Until the admin page exists, deletion requests are handled by hand in the Neon console or Prisma Studio (written into the checklist). Both must exist before launch.
+
+### Verified
+- `docker build` of both images (app 308 MB). The app runs as uid 1001.
+- **Migrations on an empty database** (as a fresh Neon would be), through the migrate image: both applied; a second run → "No pending migrations"; `prisma migrate diff --exit-code` → "No difference detected" (the schema and migrations match).
+- **Production image against that database:** every route returns 200, `/nope` returns 404, `/api/health` and `?ready=1` are ok, all 5 security headers present, no `X-Powered-By`.
+- **No-JS form post end to end:** 5 member posts saved (trimmed, `consentAt` set). The 6th was **rate-limited even though every post forged a different leftmost IP**. The container logs had no form values. The test database was dropped afterwards.
+- After the Next upgrade: `next build` passes, the image was rebuilt and health-checked.
+
+### Not verified (needs the real environment, see `docs/DEPLOY.md`)
+- The arm64 build in GitHub Actions, the cluster deploy, the certificate, Resend email.
+- **Whether real client IPs reach Traefik.** If k3s ServiceLB SNATs, every visitor shares one IP and the limit becomes site-wide. There's a post-deploy check for this in the checklist.
+
+### Stage 5.1 — Neon set up; domain changed to `cybersis.uk` (2026-11-17)
+- **Neon set up:** project `cybersis` in **AWS London (eu-west-2)**, database `neondb`, both URLs in the owner's Bitwarden. On a throwaway branch, `migrate deploy` applied both migrations ("Database schema is up to date!"). The app's pooled URL with the `pg` driver also worked there: `/api/health?ready=1` was ok and one form post was saved. The branch was then deleted.
+- **`cybersis.org` turned out to be taken:** it was registered on 28 October 2024 through Wix (registrar Tucows), with no site connected. `.scot` was considered, but **`cybersis.uk`** was bought through Cloudflare Registrar, so the DNS lives in Cloudflare next to IdistinguishR.
+- **Updated:** `site.ts` (URL and `hello@` email, used by metadata, the footer, the contact page and the privacy page), the ingress host and TLS, the workflow smoke-test URL, `RESEND_FROM` and `docs/DEPLOY.md`. Earlier log entries are left as written.
+- **Privacy note for later:** the data is hosted in London, so the privacy notice can say it stays in the UK (Neon). Oracle's region still needs confirming.
+
+### Stage 5.2 — Forms v2 from the founder's copy, new tagline (2026-11-18)
+
+**Owner decisions** (asked because the founder's document conflicted with earlier decisions):
+| Question | Decision |
+|---|---|
+| Ages (the document went from "Under 11" to "25 and over") | **Keep 16–25.** The age field stays "16 to 17" or "18 to 25". The site copy is unchanged |
+| Consent for 16–17 (the document said parent permission under 18) | **Keep own consent at 16+** (the 2 November decision) |
+| Under-16 handling | Not applicable (16+ only) |
+| Earlier fields not in the document (phone, how-heard, member message, LinkedIn) | **Keep all four** |
+
+**What changed**
+- **Member:** "I am" (the young woman joining, parent or guardian, teacher or youth worker), age, name of person joining, your name (if different), email, phone (optional), town or postcode area, interested in (tick any), how-heard and message (optional).
+- **Mentor:** full name, email, phone (optional), job title and employer, what can you help with (tick any), time you can give, format, LinkedIn (optional), message (now **optional**: the document doesn't ask for it).
+- **Partner:** organisation, "we are a", your name, email, phone (optional), how would you like to help (**at least one** tick), approximate funding (**only if Funding is ticked**), space details (**only if A space is ticked**), anything to add (now optional).
+- **Conditional questions:** with JS they appear only when their box is ticked. Without JS they're always shown, labelled "Only if you ticked…", and the server discards answers to questions that weren't asked (`onlyAskedAnswers`).
+- **Copy:** consent lines, button labels ("Join CyberSis", "Join as a mentor", "Send enquiry"), page intros and thank-you messages, all adapted from the document. "Women and girls" became "young women" to match 16–25. **New commitment:** "within 5 working days" (members and partners), from the founder's document.
+- **Privacy page:** "When you register your interest" now lists exactly what each form collects. Still marked Draft.
+- **Email alert:** still the first name only. The forms now take a full name, so the alert uses its first word.
+- **Tagline:** "Coded with care" became **"Rewrite the code"** (hero heading, the `.sr-only` twin, footer, page titles, Open Graph, README).
+
+**Schema:** migration `20261118120000_forms_v2`, generated with `migrate diff` (`migrate dev` won't run non-interactively) and **hand-edited before it was applied or committed**:
+- `firstName` is **renamed** to `name` (rather than dropped and re-added)
+- the old single partner `interest` is carried into the new `partnerHelp[]` (SPONSOR/FUND → FUNDING, HOST → SPACE), and the `PartnerInterest` enum is dropped
+- new enums: `SubmitterRole`, `MemberInterest`, `MentorSkill`, `MentorTime`, `MentorFormat`, `OrganisationType`, `PartnerHelp`, `FundingRange`
+- multi-tick answers are stored as enum arrays
+
+It isn't purely additive. That's acceptable only because nothing is deployed yet.
+
+**Verified**
+- Migration applied locally. The existing local row kept its name through the rename. Drift check is clean.
+- **11 handler tests** against local Postgres all pass: valid member, mentor and partner with arrays saved; missing radios; a bad tick value; age 14–15 rejected; Funding with no amount; Space with no details; nothing ticked; no-JS answers to unasked questions discarded. Test rows deleted.
+- `tsc`, `next build` and `npm audit` (0) pass. The pages render with the new copy, and the no-JS fallback labels are present in the HTML.

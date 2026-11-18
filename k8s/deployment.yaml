@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cybersis
+  namespace: cybersis
+  labels:
+    app: cybersis
+spec:
+  # One replica on purpose: the form rate limiter keeps its counts in memory
+  # (src/lib/rate-limit.ts), so N pods would each allow the full limit. Go
+  # above 1 only after moving the limiter to shared storage.
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      # Start the new pod and wait until it's ready before stopping the old one.
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: cybersis
+  template:
+    metadata:
+      labels:
+        app: cybersis
+    spec:
+      containers:
+        - name: cybersis
+          # The deploy workflow swaps this tag for the commit's.
+          image: ghcr.io/distinguish101/cybersisi:latest
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - secretRef:
+                name: cybersis-secrets
+          env:
+            # Sender for alert emails. Must be on the domain verified in Resend;
+            # until then the app falls back to onboarding@resend.dev, which only
+            # delivers to the Resend account owner.
+            - name: RESEND_FROM
+              value: "CyberSis <noreply@cybersis.uk>"
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 384Mi
+          securityContext:
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+          # Both probes use /api/health WITHOUT ?ready=1: it never touches the
+          # database, so the probes can't keep Neon's free tier awake (the cause
+          # of IdistinguishR's outage), and a database blip can't restart the pod.
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3

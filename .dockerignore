@@ -1,0 +1,26 @@
+node_modules
+.next
+.git
+.github
+src/generated
+*.tsbuildinfo
+next-env.d.ts
+
+# secrets: never inside an image
+.env
+.env.*
+!.env.example
+
+# not needed at runtime
+docs
+k8s
+README.md
+CLAUDE.md
+docker-compose.yml
+
+# editor / OS cruft
+.vscode
+.idea
+*.log
+.DS_Store
+Thumbs.db
